@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdio.h>
 #include <Board.class.h>
 #include <Player.class.h>
 
