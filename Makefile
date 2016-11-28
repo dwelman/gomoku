@@ -6,7 +6,7 @@ SRC = $(addprefix src/, $(SRC_FILES))
 
 OBJ = $(SRC:.cpp=.o)
 
-CFLAG = -Wall -Werror -Wextra
+CFLAG = -Wall -Werror -Wextra -lncurses
 
 INCLUDES = -I includes/
 
@@ -14,7 +14,7 @@ all: $(NAME)
 
 $(NAME):
 	@g++ $(INCLUDES) -c $(SRC)
-	@echo "OBJECTS CREATED"
+	@echo "OBJECTS CREATED"b
 	@/bin/mv -f *.o src
 	@g++ $(CFLAG) $(INCLUDES) -o $(NAME) $(OBJ)
 	@echo "PROJECT CREATED"
