@@ -59,9 +59,12 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 		{
 			if (board[p_y][p_x] == playerNum)
 			{
-				contCount++;
 				if (emptCount > 1)
+				{
 					contCount = 0;
+					emptCount = 0;
+				}
+				contCount++;
 			}
 			else if (board[p_y][p_x] != 0 && contCount > 0)
 			{
@@ -76,18 +79,22 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 	}
 	if (contCount >= 3)
 		freeCount++;
+	cout << "After neg y pos x check free count = " << freeCount << endl;
 	contCount = 1;
 	emptCount = 0;
-	p_x = x - 5;
+	p_x = x + 5;
 	for (p_y = y + 5; p_y >= y - 5; p_y--)
 	{
 		if (p_y >= 0 && p_y < boardDim && p_x >= 0 && p_x < boardDim)
 		{
 			if (board[p_y][p_x] == playerNum)
 			{
-				contCount++;
 				if (emptCount > 1)
+				{
 					contCount = 0;
+					emptCount = 0;
+				}
+				contCount++;
 			}
 			else if (board[p_y][p_x] != 0 && contCount > 0)
 			{
@@ -98,10 +105,11 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 				emptCount++;
 			}
 		}
-		p_x++;
+		p_x--;
 	}
 	if (contCount >= 3)
 		freeCount++;
+	cout << "After pos y pos x check free count = " << freeCount << endl;
 	contCount = 1;
 	emptCount = 0;
 	for (p_y = y + 5; p_y >= y - 5; p_y--)
@@ -110,9 +118,12 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 		{
 			if (board[p_y][x] == playerNum)
 			{
-				contCount++;
 				if (emptCount > 1)
+				{
 					contCount = 0;
+					emptCount = 0;
+				}
+				contCount++;
 			}
 			else if (board[p_y][x] != 0 && contCount > 0)
 			{
@@ -126,6 +137,7 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 	}
 	if (contCount >= 3)
 		freeCount++;
+	cout << "After x check free count = " << freeCount << endl;
 	contCount = 1;
 	emptCount = 0;
 	for (p_x = x + 5; p_x >= x - 5; p_x--)
@@ -134,9 +146,12 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 		{
 			if (board[y][p_x] == playerNum)
 			{
-				contCount++;
 				if (emptCount > 1)
+				{
 					contCount = 0;
+					emptCount = 0;
+				}
+				contCount++;
 			}
 			else if (board[y][p_x] != 0 && contCount > 0)
 			{
@@ -150,7 +165,7 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 	}
 	if (contCount >= 3)
 		freeCount++;
-	cout << freeCount << endl;
+	cout << "After x check free count = " << freeCount << endl;
 	return (freeCount);
 }
 
@@ -247,8 +262,8 @@ void	Board::checkFlanks(int y, int x, Player *player)
 			if (board[y - 2][x - 2] != 0 && board[y - 2][x - 2] != playerNum)
 			if (board[y - 3][x - 3] == playerNum)
 			{
-				board[y + 1][x - 1] = 0;
-				board[y + 2][x - 2] = 0;
+				board[y - 1][x - 1] = 0;
+				board[y - 2][x - 2] = 0;
 				player->incCaptures();
 			}
 		}
