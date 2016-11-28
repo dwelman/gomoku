@@ -21,6 +21,6 @@ class	Board
         int     **board;
 
         int		returnFreeThrees(int y, int x, int playerNum);
-        void	checkFlanks(int y, int x, Player *player);
+        int 	checkFlanks(int y, int x, Player *player);
         bool    checkVictory(int y, int x, int playerNum);
 };
