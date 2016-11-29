@@ -1,53 +1,4 @@
 #include <gomoku.h>
-//void    printBoardN(WINDOW *w, int activeX, int activeY);
-
-void	drawTitle(t_env *env) {
-	char xo;
-
-	getmaxyx(stdscr, env->maxY, env->maxX);
-	wattron(env->win_stats, COLOR_PAIR(4));
-	if (env->debug == 1) {
-		mvwprintw(env->win_stats, 0, 0, "DEBUG MODE ACTIVATED!");
-		mvwprintw(env->win_stats, 0, 55, "Screen size : %04d x %04d", env->maxX, env->maxY);
-	}
-	if (env->maxX < 90 || env->maxY < 65)
-		wclear(env->win_stats);
-	mvwprintw(env->win_stats, 1, 0, "%s\n%s", "   ___  _____________  ____ \n"
-			"  / _ \\/ __/_  __/ _ \\/ __ \\\n"
-			" / , _/ _/  / / / , _/ /_/ /\n"
-			"/_/|_/___/ /_/ /_/|_|\\____/ \n"
-			"                           ", " ________  ________  _____ ______   ________  ___  __    ___  ___     \n"
-					  "|\\   ____\\|\\   __  \\|\\   _ \\  _   \\|\\   __  \\|\\  \\|\\  \\ |\\  \\|\\  \\    \n"
-					  "\\ \\  \\___|\\ \\  \\|\\  \\ \\  \\\\\\__\\ \\  \\ \\  \\|\\  \\ \\  \\/  /|\\ \\  \\\\\\  \\   \n"
-					  " \\ \\  \\  __\\ \\  \\\\\\  \\ \\  \\\\|__| \\  \\ \\  \\\\\\  \\ \\   ___  \\ \\  \\\\\\  \\  \n"
-					  "  \\ \\  \\|\\  \\ \\  \\\\\\  \\ \\  \\    \\ \\  \\ \\  \\\\\\  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\ \n"
-					  "   \\ \\_______\\ \\_______\\ \\__\\    \\ \\__\\ \\_______\\ \\__\\\\ \\__\\ \\_______\\\n"
-					  "    \\|_______|\\|_______|\\|__|     \\|__|\\|_______|\\|__| \\|__|\\|_______|");
-	wattroff(env->win_stats, COLOR_PAIR(4));
-	wattron(env->win_stats, WA_BLINK);
-	if (env->player == 1)
-	{
-		xo = 'O';
-		wattron(env->win_stats, COLOR_PAIR(5));
-	}
-	else
-	{
-		xo = 'X';
-		wattron(env->win_stats, COLOR_PAIR(6));
-	}
-	mvwprintw(env->win_stats, 20, 0, "PLAYER %d (%c) MAKE A MOVE...",  env->player, xo);
-	wattroff(env->win_stats, WA_BLINK);
-	wattron(env->win_stats, COLOR_PAIR(6));
-	if (env->placeRet == -1)
-		mvwprintw(env->win_stats, 14 , 0, "INVALID MOVE!");
-	else
-	{
-		wmove(env->win_stats, 14, 0);
-		wclrtoeol(env->win_stats);
-	}
-	wattroff(env->win_stats, WA_BLINK);
-
-}
 
 void	initWin(t_env *env)
 {
@@ -62,9 +13,9 @@ void	initWin(t_env *env)
 	raw();
 	noecho();
 	cbreak();
-	env->win_board = newwin(45, 90, 22, 0);
-	wborder(env->win_board, '|', '|', '-', '-', '+', '+', '+', '+');
-	env->win_stats = newwin(21, 90, 0, 0);
+	env->win_board = newwin(45, 90, 22, 2);
+	wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+	env->win_stats = newwin(21, 90, 0, 2);
 	drawTitle(env);
 	keypad(env->win_board, TRUE);
 	curs_set(0);
@@ -79,73 +30,61 @@ void	initEnv(t_env *env)
 	env->activeY = 0;
 	env->player = 1;
 	env->placeRet = 0;
+	env->gameMode = GM_PVP;
+	env->gameStarted = false;
+	env->p1_time = 0;
+	env->p2_time = 0;
 	initWin(env);
 	getmaxyx(stdscr, env->maxY, env->maxX);
 }
 
-void	keyHook(t_env *env, Board *gameBoard, Player *player1, Player *player2)
+void	refreshAll(t_env *env)
 {
-	int		input;
+	refresh();
+	wrefresh(env->win_board);
+	wrefresh(env->win_stats);
+}
 
-	input = wgetch(env->win_board);
+void	menu(t_env *env)
+{
+	int	winX;
+	int	winY;
+	int	input;
 
-	switch (input)
+	getmaxyx(env->win_board, winY, winX);
+	input = 0;
+	while (input != 10)
 	{
-		case KEY_LEFT :
-			if (env->activeX > 0)
-				env->activeX--;
-			else
-				env->activeX = 18;
-			break ;
-		case KEY_RIGHT :
-			if (env->activeX < 18)
-				env->activeX++;
-			else
-				env->activeX = 0;
-			break ;
-		case KEY_DOWN :
-			if (env->activeY < 18)
-				env->activeY++;
-			else
-				env->activeY = 0;
-			break ;
-		case KEY_UP :
-			if (env->activeY > 0)
-				env->activeY--;
-			else
-				env->activeY = 18;
-			break ;
-		case 10 :
-			if (env->player == 1)
-			{
-				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , player1);
-				if (env->placeRet == 0 && !env->debug)
-					env->player = 2;
-			}
-			else
-			{
-				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , player2);
-				if (env->placeRet == 0 && !env->debug)
-					env->player = 1;
-			}
-			break ;
-		case 27 :
-			mvwprintw(env->win_stats, 14 , 0, "ESC Pressed");
-			delwin(env->win_board);
-			delwin(env->win_stats);
-			endwin();
-			exit(1);
-		case '1' :
-			if (env->debug == 1)
-				env->player = 1;
-			break ;
-		case '2' :
-			if (env->debug == 1)
-				env->player = 2;
-			break ;
-		default:
-			wclear(env->win_board);
-			break;
+		wattron(env->win_board, WA_BOLD | WA_UNDERLINE);
+		mvwprintw(env->win_board, winY / 2 + 1 - 3, winX / 2 - 4, "GAME MODE",  env->gameMode);
+		wattroff(env->win_board, WA_UNDERLINE);
+		if (env->gameMode == GM_PVP)
+			wattron(env->win_board, WA_STANDOUT);
+		mvwprintw(env->win_board ,winY / 2 + 3 - 3, winX / 2 - 8, "Player vs Player",  env->gameMode);
+		wattroff(env->win_board, WA_STANDOUT);
+		if (env->gameMode == GM_PVAI)
+			wattron(env->win_board, WA_STANDOUT);
+		mvwprintw(env->win_board, winY / 2 + 5 - 3, winX / 2 - 6, "Player vs AI",  env->gameMode);
+		wattroff(env->win_board, WA_STANDOUT);
+		refreshAll(env);
+		input = wgetch(env->win_board);
+		switch (input)
+		{
+			case KEY_RIGHT :
+			case KEY_DOWN :
+			case KEY_LEFT :
+			case KEY_UP :
+				if (env->gameMode == GM_PVP)
+					env->gameMode = GM_PVAI;
+				else
+					env->gameMode = GM_PVP;
+				break ;
+			default:
+				drawTitle(env);
+				wclear(env->win_board);
+				wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+		}
+
 	}
 }
 
@@ -167,8 +106,11 @@ int		main(int argc, char **argv)
 	}
 	initEnv(&env);
 	gameBoard = new Board(BOARD_DIM);
-	player1 = new Player(1);
-	player2 = new Player(2);
+	env.player1 = new Player(1);
+	env.player2 = new Player(2);
+	menu(&env);
+	env.gameStarted = true;
+	drawTitle(&env);
 	if (env.maxX < 90 || env.maxY < 65)
 	{
 		wclear(env.win_board);
@@ -176,13 +118,11 @@ int		main(int argc, char **argv)
 	}
 	else
 		gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
-	refresh();
-	wrefresh(env.win_board);
-	wrefresh(env.win_stats);
+	refreshAll(&env);
 	while (env.placeRet != 1)
 	{
 		wborder(env.win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
-		keyHook(&env, gameBoard, player1, player2);
+		keyHook(&env, gameBoard);
 		if (env.maxX < 90 || env.maxY < 65)
 		{
 			wclear(env.win_board);
@@ -195,9 +135,7 @@ int		main(int argc, char **argv)
 			gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
 		}
 		drawTitle(&env);
-		refresh();
-		wrefresh(env.win_board);
-		wrefresh(env.win_stats);
+		refreshAll(&env);
 	}
 	endwin();
 }

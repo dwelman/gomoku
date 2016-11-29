@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <gomoku.h>
 
 class   Player;
