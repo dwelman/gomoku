@@ -79,7 +79,6 @@ void	initEnv(t_env *env)
 	env->activeY = 0;
 	env->player = 1;
 	env->placeRet = 0;
-	env->debug = 0;
 	initWin(env);
 	getmaxyx(stdscr, env->maxY, env->maxX);
 }
@@ -160,6 +159,7 @@ int		main(int argc, char **argv)
 	int		y;
 	int		input;
 
+	env.debug = 0;
 	if (argc == 2)
 	{
 		if (strcmp(argv[1], "-d") == 0)
