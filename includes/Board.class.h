@@ -13,7 +13,7 @@ class	Board
         int     **getBoard(){ return (this->board); }
 
         void    printBoard();
-		void    printBoardN(WINDOW *w, int activeX, int activeY);
+		void    printBoardN(WINDOW *w, int activeX, int activeY, int xOff, int yOff);
         int     placePiece(int y, int x, Player *player);
 
     private:
