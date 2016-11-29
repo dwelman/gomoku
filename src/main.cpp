@@ -79,6 +79,7 @@ void	initEnv(t_env *env)
 	env->activeY = 0;
 	env->player = 1;
 	env->placeRet = 0;
+	env->debug = 0;
 	initWin(env);
 	getmaxyx(stdscr, env->maxY, env->maxX);
 }
