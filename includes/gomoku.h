@@ -32,16 +32,18 @@ typedef struct		s_env
 	int		maxX;
 	int		maxY;
 	bool	gameStarted;
+	bool	validMoveMade;
 	Player	*player1;
 	Player	*player2;
-	double	p1_time;
-	double	p2_time;
+	long	p1_time;
+	long	p2_time;
+	double	curTurnStart;
 }					t_env;
 
 using namespace std;
 
 #define BOARD_DIM 19
 
-void	keyHook(t_env *env, Board *gameBoard);
+void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_point start_time);
 
 void	drawTitle(t_env *env);

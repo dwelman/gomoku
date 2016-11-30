@@ -34,6 +34,7 @@ void	initEnv(t_env *env)
 	env->gameStarted = false;
 	env->p1_time = 0;
 	env->p2_time = 0;
+	env->validMoveMade = true;
 	initWin(env);
 	getmaxyx(stdscr, env->maxY, env->maxX);
 }
@@ -97,6 +98,7 @@ int		main(int argc, char **argv)
 	int		x;
 	int		y;
 	int		input;
+	chrono::high_resolution_clock::time_point	start_time;
 
 	env.debug = 0;
 	if (argc == 2)
@@ -119,10 +121,13 @@ int		main(int argc, char **argv)
 	else
 		gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
 	refreshAll(&env);
+
 	while (env.placeRet != 1)
 	{
 		wborder(env.win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
-		keyHook(&env, gameBoard);
+		if (env.validMoveMade == true)
+			start_time = chrono::high_resolution_clock::now();
+		keyHook(&env, gameBoard, start_time);
 		if (env.maxX < 90 || env.maxY < 65)
 		{
 			wclear(env.win_board);

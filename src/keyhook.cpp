@@ -4,12 +4,12 @@
 // Created by Dean DU TOIT on 11/29/16.
 //
 
-void	keyHook(t_env *env, Board *gameBoard)
+void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_point start_time)
 {
 	int		input;
 
-	auto start_time = chrono::high_resolution_clock::now();
 	input = wgetch(env->win_board);
+	env->validMoveMade = false;
 	switch (input)
 	{
 		case KEY_LEFT :
@@ -46,6 +46,7 @@ void	keyHook(t_env *env, Board *gameBoard)
 					auto end_time = chrono::high_resolution_clock::now();
 					auto time = end_time - start_time;
 					env->p1_time = chrono::duration_cast<chrono::milliseconds>(time).count();
+					env->validMoveMade = true;
 				}
 			}
 			else
@@ -57,6 +58,7 @@ void	keyHook(t_env *env, Board *gameBoard)
 					auto time = end_time - start_time;
 					env->p2_time = chrono::duration_cast<chrono::milliseconds>(time).count();
 					env->player = 1;
+					env->validMoveMade = true;
 				}
 			}
 			break ;
