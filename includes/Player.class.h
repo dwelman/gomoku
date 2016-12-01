@@ -10,7 +10,7 @@ class	Player
 		int		getPlayerNum(){ return (this->playerNum); }
 		int		getCaptures(){ return (this->captures); }
 
-		void	incCaptures(){ this->captures++; }
+		void	incCaptures(int val){ this->captures += val; }
 
 	private:
 		int		playerNum;

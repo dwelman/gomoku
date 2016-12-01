@@ -14,7 +14,7 @@ all: $(NAME)
 
 $(NAME):
 	@g++ -std=c++11 $(INCLUDES) -c $(SRC)
-	@echo "OBJECTS CREATED"b
+	@echo "OBJECTS CREATED"
 	@/bin/mv -f *.o src
 	@g++ $(CFLAG) $(INCLUDES) -o $(NAME) $(OBJ)
 	@echo "PROJECT CREATED"

@@ -10,6 +10,7 @@ class	Board;
 #include <ncurses.h>
 #include <Board.class.h>
 #include <Player.class.h>
+#include <ValBoard.class.h>
 #include <chrono>
 
 #define X_OFF 5

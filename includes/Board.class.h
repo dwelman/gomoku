@@ -16,12 +16,12 @@ class	Board
         void    printBoard();
 		void    printBoardN(WINDOW *w, int activeX, int activeY, int xOff, int yOff);
         int     placePiece(int y, int x, Player *player);
+        void    setTile(int y, int x, int val){ this->board[y][x] = val; }
+        bool    checkVictory(int y, int x, int playerNum);
+        int	    returnFreeThrees(int y, int x, int playerNum);
+        int 	checkFlanks(int y, int x, int playerNum);
 
     private:
         int     boardDim;
         int     **board;
-
-        int		returnFreeThrees(int y, int x, int playerNum);
-        int 	checkFlanks(int y, int x, Player *player);
-        bool    checkVictory(int y, int x, int playerNum);
 };

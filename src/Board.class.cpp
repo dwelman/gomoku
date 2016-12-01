@@ -161,9 +161,8 @@ int		Board::returnFreeThrees(int y, int x, int playerNum)
 	return (freeCount);
 }
 
-int		Board::checkFlanks(int y, int x, Player *player)
+int		Board::checkFlanks(int y, int x, int playerNum)
 {
-	int		playerNum;
 	int		ret;
 	bool	isYDiagSizePos;
 	bool	isYDiagSizeNeg;
@@ -171,7 +170,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 	ret = 0;
 	isYDiagSizePos = false;
 	isYDiagSizeNeg = false;
-	playerNum = player->getPlayerNum();
 	if (y + 3 < boardDim)
 	{
 		isYDiagSizePos = true;
@@ -181,7 +179,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 		{
 			board[y + 1][x] = 0;
 			board[y + 2][x] = 0;
-			player->incCaptures();
 			ret++;
 		}
 	}
@@ -194,7 +191,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 		{
 			board[y - 1][x] = 0;
 			board[y - 2][x] = 0;
-			player->incCaptures();
 			ret++;
 		}
 	}
@@ -206,7 +202,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 		{
 			board[y][x + 1] = 0;
 			board[y][x + 2] = 0;
-			player->incCaptures();
 			ret++;
 		}
 		if (isYDiagSizePos)
@@ -217,7 +212,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 			{
 				board[y + 1][x + 1] = 0;
 				board[y + 2][x + 2] = 0;
-				player->incCaptures();
 				ret++;
 			}
 		}
@@ -227,9 +221,8 @@ int		Board::checkFlanks(int y, int x, Player *player)
 			if (board[y - 2][x + 2] != 0 && board[y - 2][x + 2] != playerNum)
 			if (board[y - 3][x + 3] == playerNum)
 			{
-				board[y + 1][x + 1] = 0;
-				board[y + 2][x + 2] = 0;
-				player->incCaptures();
+				board[y - 1][x + 1] = 0;
+				board[y -  2][x + 2] = 0;
 				ret++;
 			}
 		}
@@ -242,7 +235,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 		{
 			board[y][x - 1] = 0;
 			board[y][x - 2] = 0;
-			player->incCaptures();
 			ret++;
 		}
 		if (isYDiagSizePos)
@@ -253,7 +245,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 			{
 				board[y + 1][x - 1] = 0;
 				board[y + 2][x - 2] = 0;
-				player->incCaptures();
 				ret++;
 			}
 		}
@@ -265,7 +256,6 @@ int		Board::checkFlanks(int y, int x, Player *player)
 			{
 				board[y - 1][x - 1] = 0;
 				board[y - 2][x - 2] = 0;
-				player->incCaptures();
 				ret++;
 			}
 		}
@@ -356,8 +346,13 @@ bool	Board::checkVictory(int y, int x, int playerNum)
 
 int		Board::placePiece(int y, int x, Player *player)
 {
-	int	playerNum;
+	int		playerNum;
+	bool	madeCapture;
+	int		ret;
+	int		caps;
 
+	ret = 0;
+	madeCapture = false;
 	playerNum = player->getPlayerNum();
 	if ((y < 0 || y >= boardDim) || (x < 0 || x >= boardDim))
 	{
@@ -368,12 +363,18 @@ int		Board::placePiece(int y, int x, Player *player)
 		return (-1);
 	}
 	board[y][x] = playerNum;
-	if (checkFlanks(y, x, player) > 0)
-		return (0);
+	if ((caps = checkFlanks(y, x, playerNum)) > 0)
+	{
+		player->incCaptures(caps);
+		ret = 1;
+		madeCapture = true;
+	}
 	if (player->getCaptures() >= 5)
-		return (1);
+		return (2);
 	if (checkVictory(y, x, playerNum))
-		return (1);
+		return (2);
+	if (madeCapture)
+		return (ret);
 	if (returnFreeThrees(y, x, playerNum) > 1)
 	{
 		board[y][x] = 0;

@@ -91,13 +91,14 @@ void	menu(t_env *env)
 
 int		main(int argc, char **argv)
 {
-	t_env	env;
-	Board	*gameBoard;
-	Player	*player1;
-	Player	*player2;
-	int		x;
-	int		y;
-	int		input;
+	t_env		env;
+	Board		*gameBoard;
+	ValBoard	*valBoard;
+	Player		*player1;
+	Player		*player2;
+	int			x;
+	int			y;
+	int			input;
 	chrono::high_resolution_clock::time_point	start_time;
 
 	env.debug = 0;
@@ -108,6 +109,7 @@ int		main(int argc, char **argv)
 	}
 	initEnv(&env);
 	gameBoard = new Board(BOARD_DIM);
+	valBoard = new ValBoard(BOARD_DIM);
 	env.player1 = new Player(1);
 	env.player2 = new Player(2);
 	menu(&env);
@@ -122,7 +124,7 @@ int		main(int argc, char **argv)
 		gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
 	refreshAll(&env);
 
-	while (env.placeRet != 1)
+	while (env.placeRet != 2)
 	{
 		wborder(env.win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
 		if (env.validMoveMade == true)
