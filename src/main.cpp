@@ -47,6 +47,7 @@ void	menu(t_env *env)
 void	playerAILoop(t_env *env, Board *gameBoard)
 {
 	chrono::high_resolution_clock::time_point	start_time;
+	int		*coord;
 
 	while (env->placeRet != 2)
 	{
@@ -54,7 +55,18 @@ void	playerAILoop(t_env *env, Board *gameBoard)
 		if (env->validMoveMade == true)
 			start_time = chrono::high_resolution_clock::now();
 		//Some if statement 
-		keyHook(env, gameBoard, start_time);
+		if (env->player == 1)
+			keyHook(env, gameBoard, start_time);
+		else
+		{
+			//AI make move
+			coord = env->player2->getBestMove(gameBoard, env->valBoard);
+			mvwprintw(env->win_stats, 20, 64, "Y = %d, X = %d, Val = %d", coord[0] + 1, coord[1] + 1, gameBoard->getBoard()[coord[0]][coord[2]]);
+			env->placeRet = gameBoard->placePiece(coord[0], coord[1], env->player2);
+			//mvwprintw(env->win_stats, 20, 64, "Y = %d, X = %d, Ret = %d", coord[0] - 1, coord[1] - 1, env->placeRet);
+			env->valBoard->placePiece(coord[0], coord[1], gameBoard);
+			env->player = 1;
+		}
 		if (env->maxX < 90 || env->maxY < 65)
 		{
 			wclear(env->win_board);
@@ -118,6 +130,7 @@ int		main(int argc, char **argv)
 	initEnv(&env);
 	gameBoard = new Board(BOARD_DIM);
 	valBoard = new ValBoard(BOARD_DIM);
+	env.valBoard = valBoard;
 	env.player1 = new Player(1);
 	env.player2 = new Player(2);
 	menu(&env);

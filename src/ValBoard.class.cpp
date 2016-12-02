@@ -31,7 +31,7 @@ vector<int*>	ValBoard::fetchTiles()
 	{
 		for (int x = 0; x < boardDim; x++)
 		{
-			if (board[y][x] != 0)
+			if (board[y][x] > 0)
 			{
 				vals = (int *)malloc(sizeof(int) * 3);
 				vals[0] = board[y][x];
@@ -43,7 +43,7 @@ vector<int*>	ValBoard::fetchTiles()
 	}
 	sort(ret.begin(), ret.end(),
 		[](int *a, int *b){
-			return (a[0] < b[0]);
+			return (a[0] > b[0]);
 		}
 	);
 	return (ret);
@@ -51,9 +51,9 @@ vector<int*>	ValBoard::fetchTiles()
 
 void	ValBoard::placePiece(int y, int x, Board *curBoard)
 {
-	int	p_y;
-	int	p_x;
-	int	curPlayNum;
+	int		p_y;
+	int		p_x;
+	int		curPlayNum;
 	bool	isYDiagSizePos;
 	bool	isYDiagSizeNeg;
 

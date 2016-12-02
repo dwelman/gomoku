@@ -42,6 +42,7 @@ void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_p
 				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , env->player1);
 				if (env->placeRet == 0 && !env->debug)
 				{
+					env->valBoard->placePiece(env->activeY, env->activeX, gameBoard);
 					env->player = 2;
 					auto end_time = chrono::high_resolution_clock::now();
 					auto time = end_time - start_time;

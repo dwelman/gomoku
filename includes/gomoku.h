@@ -1,6 +1,7 @@
 #pragma once
 
 class	Board;
+class	ValBoard;
 
 #include <string>
 #include <ctime>
@@ -22,23 +23,24 @@ typedef std::chrono::high_resolution_clock Clock;
 
 typedef struct		s_env
 {
-	int		gameMode;
-	int		debug;
-	int		activeX;
-	int		activeY;
-	int		player;
-	int		placeRet;
-	WINDOW	*win_board;
-	WINDOW	*win_stats;
-	int		maxX;
-	int		maxY;
-	bool	gameStarted;
-	bool	validMoveMade;
-	Player	*player1;
-	Player	*player2;
-	long	p1_time;
-	long	p2_time;
-	double	curTurnStart;
+	int			gameMode;
+	int			debug;
+	int			activeX;
+	int			activeY;
+	int			player;
+	int			placeRet;
+	WINDOW		*win_board;
+	WINDOW		*win_stats;
+	int			maxX;
+	int			maxY;
+	bool		gameStarted;
+	bool		validMoveMade;
+	Player		*player1;
+	Player		*player2;
+	ValBoard	*valBoard;
+	long		p1_time;
+	long		p2_time;
+	double		curTurnStart;
 }					t_env;
 
 using namespace std;
