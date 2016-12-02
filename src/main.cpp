@@ -77,6 +77,9 @@ void	playerAILoop(t_env *env, Board *gameBoard)
 			wmove(env->win_board, 1, 1);
 			wclrtoeol(env->win_board);
 			gameBoard->printBoardN(env->win_board, env->activeX, env->activeY, X_OFF, Y_OFF);
+			if (env->debug == true)
+			env->valBoard->printBoardN(env->win_debug, X_OFF, Y_OFF);
+
 		}
 		drawTitle(env);
 		refreshAll(env);
@@ -98,11 +101,12 @@ void	playerVPlayer(t_env *env, Board *gameBoard)
 			wclear(env->win_board);
 			mvwprintw(env->win_board, 1, 1, "%s", "Please Enlarge window to view board.");
 		}
-		else
-		{
+		else {
 			wmove(env->win_board, 1, 1);
 			wclrtoeol(env->win_board);
 			gameBoard->printBoardN(env->win_board, env->activeX, env->activeY, X_OFF, Y_OFF);
+			if (env->debug == 1)
+				gameBoard->printBoardN(env->win_debug, env->activeX, env->activeY, X_OFF, Y_OFF);
 		}
 		drawTitle(env);
 		refreshAll(env);

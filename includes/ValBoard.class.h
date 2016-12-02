@@ -14,8 +14,10 @@ class ValBoard
 		void			setVal(int y, int x, int val){ this->board[y][x] = val; }
 		void			placePiece(int y, int x, Board *curBoard);
 		vector<int*>	fetchTiles();
+		void			printBoardN(WINDOW *w, int xOff, int yOff);
 
-	private:
+
+private:
 		int		boardDim;
 		int		**board;
 };

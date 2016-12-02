@@ -31,6 +31,7 @@ typedef struct		s_env
 	int			placeRet;
 	WINDOW		*win_board;
 	WINDOW		*win_stats;
+	WINDOW		*win_debug;
 	int			maxX;
 	int			maxY;
 	bool		gameStarted;

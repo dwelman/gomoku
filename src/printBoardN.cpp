@@ -56,3 +56,33 @@ void	Board::printBoardN(WINDOW *w, int activeX, int activeY, int xOff, int yOff)
 		}
 	}
 }
+
+void	ValBoard::printBoardN(WINDOW *w, int xOff, int yOff)
+{
+	char	temp[20];
+	int		xpos;
+
+	xpos = 0;
+	wattron(w, COLOR_PAIR(1));
+	for (int k = 0; k <= boardDim; k++)
+	{
+		mvwprintw(w, 1 + yOff, 2 * xpos + xOff, "%-1d ", k );
+		if (xpos != 0)
+			mvwprintw(w, xpos + 1 + yOff, 0 + xOff, "%-1d ", k);
+		xpos += 2;
+	}
+	wattron(w, COLOR_PAIR(2));
+	for (int y = 0; y < boardDim; y++)
+	{
+		xpos = 0;
+		for (int x = 0; x < boardDim; x++)
+		{
+			if (this->board[y][x] == 0)
+				wattron(w, COLOR_PAIR(2));
+			else
+				wattron(w, COLOR_PAIR(4));
+			mvwprintw(w, y * 2 + 3 + yOff, 2 * xpos + 4 + xOff, "%3d ", this->board[y][x]);
+			xpos += 2;
+		}
+	}
+}

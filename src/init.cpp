@@ -9,6 +9,7 @@ void	refreshAll(t_env *env)
 	refresh();
 	wrefresh(env->win_board);
 	wrefresh(env->win_stats);
+	wrefresh(env->win_debug);
 }
 
 void	initWin(t_env *env)
@@ -27,12 +28,11 @@ void	initWin(t_env *env)
 	env->win_board = newwin(45, 90, 22, 2);
 	wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
 	env->win_stats = newwin(21, 90, 0, 2);
+	env->win_debug = newwin(45, 90, 22, 92);
 	drawTitle(env);
 	keypad(env->win_board, TRUE);
 	curs_set(0);
-	refresh();
-	wrefresh(env->win_board);
-	wrefresh(env->win_stats);
+	refreshAll(env);
 }
 
 void	initEnv(t_env *env)
