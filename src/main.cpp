@@ -1,50 +1,5 @@
 #include <gomoku.h>
 
-void	initWin(t_env *env)
-{
-	initscr();
-	start_color();
-	init_pair(1, COLOR_YELLOW, COLOR_BLACK);
-	init_pair(2, COLOR_WHITE, COLOR_BLACK);
-	init_pair(3, COLOR_CYAN, COLOR_BLACK);
-	init_pair(4, COLOR_GREEN, COLOR_BLACK);
-	init_pair(5, COLOR_BLUE, COLOR_BLACK);
-	init_pair(6, COLOR_RED, COLOR_BLACK);
-	raw();
-	noecho();
-	cbreak();
-	env->win_board = newwin(45, 90, 22, 2);
-	wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
-	env->win_stats = newwin(21, 90, 0, 2);
-	drawTitle(env);
-	keypad(env->win_board, TRUE);
-	curs_set(0);
-	refresh();
-	wrefresh(env->win_board);
-	wrefresh(env->win_stats);
-}
-
-void	initEnv(t_env *env)
-{
-	env->activeX = 0;
-	env->activeY = 0;
-	env->player = 1;
-	env->placeRet = 0;
-	env->gameMode = GM_PVP;
-	env->gameStarted = false;
-	env->p1_time = 0;
-	env->p2_time = 0;
-	env->validMoveMade = true;
-	initWin(env);
-	getmaxyx(stdscr, env->maxY, env->maxX);
-}
-
-void	refreshAll(t_env *env)
-{
-	refresh();
-	wrefresh(env->win_board);
-	wrefresh(env->win_stats);
-}
 
 void	menu(t_env *env)
 {
@@ -89,6 +44,59 @@ void	menu(t_env *env)
 	}
 }
 
+void	playerAILoop(t_env *env, Board *gameBoard)
+{
+	chrono::high_resolution_clock::time_point	start_time;
+
+	while (env->placeRet != 2)
+	{
+		wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+		if (env->validMoveMade == true)
+			start_time = chrono::high_resolution_clock::now();
+		//Some if statement 
+		keyHook(env, gameBoard, start_time);
+		if (env->maxX < 90 || env->maxY < 65)
+		{
+			wclear(env->win_board);
+			mvwprintw(env->win_board, 1, 1, "%s", "Please Enlarge window to view board.");
+		}
+		else
+		{
+			wmove(env->win_board, 1, 1);
+			wclrtoeol(env->win_board);
+			gameBoard->printBoardN(env->win_board, env->activeX, env->activeY, X_OFF, Y_OFF);
+		}
+		drawTitle(env);
+		refreshAll(env);
+	}
+}
+
+void	playerVPlayer(t_env *env, Board *gameBoard)
+{
+	chrono::high_resolution_clock::time_point	start_time;
+
+	while (env->placeRet != 2)
+	{
+		wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+		if (env->validMoveMade == true)
+			start_time = chrono::high_resolution_clock::now();
+		keyHook(env, gameBoard, start_time);
+		if (env->maxX < 90 || env->maxY < 65)
+		{
+			wclear(env->win_board);
+			mvwprintw(env->win_board, 1, 1, "%s", "Please Enlarge window to view board.");
+		}
+		else
+		{
+			wmove(env->win_board, 1, 1);
+			wclrtoeol(env->win_board);
+			gameBoard->printBoardN(env->win_board, env->activeX, env->activeY, X_OFF, Y_OFF);
+		}
+		drawTitle(env);
+		refreshAll(env);
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	t_env		env;
@@ -123,26 +131,9 @@ int		main(int argc, char **argv)
 	else
 		gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
 	refreshAll(&env);
-
-	while (env.placeRet != 2)
-	{
-		wborder(env.win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
-		if (env.validMoveMade == true)
-			start_time = chrono::high_resolution_clock::now();
-		keyHook(&env, gameBoard, start_time);
-		if (env.maxX < 90 || env.maxY < 65)
-		{
-			wclear(env.win_board);
-			mvwprintw(env.win_board, 1, 1, "%s", "Please Enlarge window to view board.");
-		}
-		else
-		{
-			wmove(env.win_board, 1, 1);
-			wclrtoeol(env.win_board);
-			gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
-		}
-		drawTitle(&env);
-		refreshAll(&env);
-	}
+	if (env.gameMode == GM_PVAI)
+		playerAILoop(&env, gameBoard);
+	else
+		playerVPlayer(&env, gameBoard);
 	endwin();
 }

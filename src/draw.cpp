@@ -49,13 +49,13 @@ void	drawTitle(t_env *env)
 		mvwprintw(env->win_stats, 15, 0, "+-----------------------------+");
 		mvwprintw(env->win_stats, 16, 0, "| %-28s|", "Player 1");
 		mvwprintw(env->win_stats, 17, 0, "| Captures : %-17d|", env->player1->getCaptures());
-		mvwprintw(env->win_stats, 18, 0, "| Last move timer : %ldms       |", env->p1_time);
+		mvwprintw(env->win_stats, 18, 0, "| Last move timer : %7ldms |", env->p1_time);
 		mvwprintw(env->win_stats, 19, 0, "+_____________________________+", env->player);
 		wattron(env->win_stats, COLOR_PAIR(6));
 		mvwprintw(env->win_stats, 15, 59, "+-----------------------------+");
 		mvwprintw(env->win_stats, 16, 59, "| %-28s|", "Player 2");
 		mvwprintw(env->win_stats, 17, 59, "| Captures : %-17d|", env->player2->getCaptures());
-		mvwprintw(env->win_stats, 18, 59, "| Last move timer : %ldms       |", env->p2_time);
+		mvwprintw(env->win_stats, 18, 59, "| Last move timer : %7ldms |", env->p2_time);
 		mvwprintw(env->win_stats, 19, 59, "+_____________________________+", env->player);
 	}
 	wattroff(env->win_stats, WA_BLINK);

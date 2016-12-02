@@ -48,3 +48,9 @@ using namespace std;
 void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_point start_time);
 
 void	drawTitle(t_env *env);
+
+void	refreshAll(t_env *env);
+
+void	initWin(t_env *env);
+
+void	initEnv(t_env *env);
