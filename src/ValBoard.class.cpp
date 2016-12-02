@@ -62,73 +62,89 @@ void	ValBoard::placePiece(int y, int x, Board *curBoard)
 
 	p_y = y - 1;
 	p_x = x - 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && (p_y >= 0 && p_x >= 0) && (p_y > p_y - 5 && p_x > p_x - 5))
+	while ((p_y >= 0 && p_x >= 0) && (p_y > p_y - 5 && p_x > p_x - 5))
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		if (board[p_y][p_x] != -1000)
+			board[p_y][p_x]++;
 		p_y--;
 		p_x--;
 	}
 
 	p_y = y + 1;
 	p_x = x + 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && (p_y < boardDim && p_x < boardDim) && (p_y < p_y + 5 && p_x < p_x + 5))
+	while ((p_y < boardDim && p_x < boardDim) && (p_y < p_y + 5 && p_x < p_x + 5))
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		if (board[p_y][p_x] != -1000)
+			board[p_y][p_x]++;
 		p_y++;
 		p_x++;
 	}
 
 	p_y = y - 1;
 	p_x = x + 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && (p_y >= 0 && p_x < boardDim) && (p_y > p_y - 5 && p_x < p_x + 5))
+	while ((p_y >= 0 && p_x < boardDim) && (p_y > p_y - 5 && p_x < p_x + 5))
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		if (board[p_y][p_x] != -1000)
+			board[p_y][p_x]++;
 		p_y--;
 		p_x++;
 	}
 
 	p_y = y + 1;
 	p_x = x - 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && (p_y < boardDim && p_x >= 0) && (p_y < p_y + 5 && p_x > p_x - 5))
+	while ((p_y < boardDim && p_x >= 0) && (p_y < p_y + 5 && p_x > p_x - 5))
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		if (board[p_y][p_x] != -1000)
+			board[p_y][p_x]++;
 		p_y++;
 		p_x--;
 	}
 
 	p_y = y + 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && p_y < boardDim && p_y < p_y + 5)
+	while (p_y < boardDim && p_y < p_y + 5)
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[p_y][x] == 0 || curBoard->getBoard()[p_y][x] == curPlayNum))
+			break;
+		if (board[p_y][x] != -1000)
+			board[p_y][x]++;
 		p_y++;
 	}
 
 	p_y = y - 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && p_y >= 0 && p_y > p_y - 5)
+	while (p_y >= 0 && p_y > p_y - 5)
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[p_y][x] == 0 || curBoard->getBoard()[p_y][x] == curPlayNum))
+			break;
+		if (board[p_y][x] != -1000)
+			board[p_y][x]++;
 		p_y--;
 	}
 
 	p_x = x + 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && p_x < boardDim && p_x < p_x + 5)
+	while (p_x < boardDim && p_x < p_x + 5)
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[y][p_x] == 0 || curBoard->getBoard()[y][p_x] == curPlayNum))
+			break;
+		if (board[y][p_x] != -1000)
+			board[y][p_x]++;
 		p_x++;
 	}
 
 	p_x = x - 1;
-	while ((curBoard->getBoard()[y][x] == 0 || curBoard->getBoard()[y][x] == curPlayNum) && p_x >= 0 && p_x > p_x - 5)
+	while (p_x >= 0 && p_x > p_x - 5)
 	{
-		if (board[y][x] != -1000)
-			board[y][x]++;
+		if (!(curBoard->getBoard()[y][p_x] == 0 || curBoard->getBoard()[y][p_x] == curPlayNum))
+			break;
+		if (board[y][p_x] != -1000)
+			board[y][p_x]++;
 		p_x--;
 	}
 	
