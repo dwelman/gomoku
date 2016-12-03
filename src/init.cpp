@@ -39,6 +39,8 @@ void	initEnv(t_env *env)
 {
 	env->activeX = 0;
 	env->activeY = 0;
+	env->player1 = new Player(1);
+	env->player2 = new Player(2);
 	env->player = 1;
 	env->placeRet = 0;
 	env->gameMode = GM_PVP;

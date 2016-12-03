@@ -1,6 +1,5 @@
 #include <gomoku.h>
 
-
 void	menu(t_env *env)
 {
 	int	winX;
@@ -44,10 +43,45 @@ void	menu(t_env *env)
 	}
 }
 
-void	playerAILoop(t_env *env, Board *gameBoard)
+bool	playerWon(t_env *env)
+{
+	int		winX;
+	int		winY;
+	int		input;
+	bool	ret;
+
+	ret = false;
+	getmaxyx(env->win_board, winY, winX);
+	wclear(env->win_board);
+	if (env->player == 1)
+		wattron(env->win_board, COLOR_PAIR(5));
+	else
+		wattron(env->win_board, COLOR_PAIR(6));
+	wattron(env->win_board, WA_BLINK);
+	mvwprintw(env->win_board ,winY / 2 + 3 - 3, winX / 2 - 8, "Player %d won!",  env->player);
+	mvwprintw(env->win_board ,winY / 2 + 3 - 2, winX / 2 - 8, "Play Again ? (Y / N) ",  env->player);
+	wattroff(env->win_stats, WA_BLINK);
+	wattroff(env->win_board, COLOR_PAIR(4));
+	input = wgetch(env->win_board);
+	cout << "input bef = " << input << endl;
+	while (input != 110 && input != 121)
+	{
+		if (input == 110)
+			ret = false;
+		else if (input == 121)
+			ret = true;
+		else
+			input = wgetch(env->win_board);
+		cout << "input = " << input << endl;
+	}
+	cout << "ret = " << ret << endl;
+	return (ret);
+}
+
+bool	playerAILoop(t_env *env, Board *gameBoard)
 {
 	chrono::high_resolution_clock::time_point	start_time;
-	int		*coord;
+	int		*coord; //free?
 
 	while (env->placeRet != 2)
 	{
@@ -78,15 +112,17 @@ void	playerAILoop(t_env *env, Board *gameBoard)
 			wclrtoeol(env->win_board);
 			gameBoard->printBoardN(env->win_board, env->activeX, env->activeY, X_OFF, Y_OFF);
 			if (env->debug == true)
-			env->valBoard->printBoardN(env->win_debug, X_OFF, Y_OFF);
+				env->valBoard->printBoardN(env->win_debug, X_OFF, Y_OFF);
 
 		}
 		drawTitle(env);
 		refreshAll(env);
 	}
+	return (playerWon(env));
 }
 
-void	playerVPlayer(t_env *env, Board *gameBoard)
+
+bool	playerVPlayer(t_env *env, Board *gameBoard)
 {
 	chrono::high_resolution_clock::time_point	start_time;
 
@@ -105,12 +141,11 @@ void	playerVPlayer(t_env *env, Board *gameBoard)
 			wmove(env->win_board, 1, 1);
 			wclrtoeol(env->win_board);
 			gameBoard->printBoardN(env->win_board, env->activeX, env->activeY, X_OFF, Y_OFF);
-			if (env->debug == 1)
-				gameBoard->printBoardN(env->win_debug, env->activeX, env->activeY, X_OFF, Y_OFF);
 		}
 		drawTitle(env);
 		refreshAll(env);
 	}
+	return (playerWon(env));
 }
 
 int		main(int argc, char **argv)
@@ -118,39 +153,39 @@ int		main(int argc, char **argv)
 	t_env		env;
 	Board		*gameBoard;
 	ValBoard	*valBoard;
-	Player		*player1;
-	Player		*player2;
-	int			x;
-	int			y;
-	int			input;
-	chrono::high_resolution_clock::time_point	start_time;
+	bool		exit;
 
-	env.debug = 0;
+	exit = false;
+	env.debug = false;
 	if (argc == 2)
 	{
 		if (strcmp(argv[1], "-d") == 0)
-			env.debug = 1;
+			env.debug = true;
 	}
-	initEnv(&env);
-	gameBoard = new Board(BOARD_DIM);
-	valBoard = new ValBoard(BOARD_DIM);
-	env.valBoard = valBoard;
-	env.player1 = new Player(1);
-	env.player2 = new Player(2);
-	menu(&env);
-	env.gameStarted = true;
-	drawTitle(&env);
-	if (env.maxX < 90 || env.maxY < 65)
-	{
-		wclear(env.win_board);
-		mvwprintw(env.win_board, 1, 1, "%s", "Please Enlarge window to view board.");
+	do {
+		cout << "RESTARTING ..." << endl;
+		initEnv(&env);
+		gameBoard = new Board(BOARD_DIM);
+		env.valBoard = new ValBoard(BOARD_DIM);
+		//env.valBoard = valBoard; //Why ?
+		menu(&env);
+		env.gameStarted = true;
+		drawTitle(&env);
+		if (env.maxX < 90 || env.maxY < 65)
+		{
+			wclear(env.win_board);
+			mvwprintw(env.win_board, 1, 1, "%s", "Please Enlarge window to view board.");
+		} else
+			gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
+		refreshAll(&env);
+		if (env.gameMode == GM_PVAI)
+			exit = playerAILoop(&env, gameBoard);
+		else
+			exit = playerVPlayer(&env, gameBoard);
+		cout << "exit " << exit << endl;
 	}
-	else
-		gameBoard->printBoardN(env.win_board, env.activeX, env.activeY, X_OFF, Y_OFF);
-	refreshAll(&env);
-	if (env.gameMode == GM_PVAI)
-		playerAILoop(&env, gameBoard);
-	else
-		playerVPlayer(&env, gameBoard);
+	while (!exit);
 	endwin();
 }
+
+//CHECK FOR STALEMATE

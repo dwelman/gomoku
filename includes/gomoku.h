@@ -24,7 +24,7 @@ typedef std::chrono::high_resolution_clock Clock;
 typedef struct		s_env
 {
 	int			gameMode;
-	int			debug;
+	bool		debug;
 	int			activeX;
 	int			activeY;
 	int			player;
@@ -57,3 +57,5 @@ void	refreshAll(t_env *env);
 void	initWin(t_env *env);
 
 void	initEnv(t_env *env);
+
+void	cleanup(t_env *env);
