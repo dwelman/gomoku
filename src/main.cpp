@@ -51,7 +51,6 @@ int		main(int argc, char **argv)
 		initEnv(&env);
 		gameBoard = new Board(BOARD_DIM);
 		env.valBoard = new ValBoard(BOARD_DIM);
-		//env.valBoard = valBoard; //Why ?
 		menu(&env);
 		env.gameStarted = true;
 		drawTitle(&env);

@@ -29,6 +29,9 @@ bool	playerAILoop(t_env *env, Board *gameBoard)
 				mvwprintw(env->win_stats, 20, 64, "Y = %d, X = %d, Val = %d", coord[0] + 1, coord[1] + 1, gameBoard->getBoard()[coord[0]][coord[2]]);
 				env->placeRet = gameBoard->placePiece(coord[0], coord[1], env->player2);
 			}
+			auto end_time = chrono::high_resolution_clock::now();
+			auto time = end_time - start_time;
+			env->p2_time = chrono::duration_cast<chrono::milliseconds>(time).count();
 			//mvwprintw(env->win_stats, 20, 64, "Y = %d, X = %d, Ret = %d", coord[0] - 1, coord[1] - 1, env->placeRet);
 			if (env->placeRet == 1)
 				env->valBoard->placePiece(coord[0], coord[1], gameBoard, true);

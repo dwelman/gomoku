@@ -40,7 +40,8 @@ void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_p
 			if (env->player == 1)
 			{
 				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , env->player1);
-				if ((env->placeRet == 0 && !env->debug ) || env->gameMode == GM_PVAI)
+				if ((env->placeRet == 0 && !env->debug)
+					|| (env->placeRet == 0 && env->debug && env->gameMode == GM_PVAI))
 				{
 					if (env->placeRet == 1)
 						env->valBoard->placePiece(env->activeY, env->activeX, gameBoard, true);
