@@ -8,6 +8,7 @@ bool	playerAILoop(t_env *env, Board *gameBoard)
 {
 	chrono::high_resolution_clock::time_point	start_time;
 	int		*coord; //free?
+	int		curMove;
 
 	while (env->placeRet != 2)
 	{
@@ -20,11 +21,19 @@ bool	playerAILoop(t_env *env, Board *gameBoard)
 		else
 		{
 			//AI make move
-			coord = env->player2->getBestMove(gameBoard, env->valBoard);
-			mvwprintw(env->win_stats, 20, 64, "Y = %d, X = %d, Val = %d", coord[0] + 1, coord[1] + 1, gameBoard->getBoard()[coord[0]][coord[2]]);
-			env->placeRet = gameBoard->placePiece(coord[0], coord[1], env->player2);
+			env->placeRet = -1;
+			curMove = 0;
+			while (env->placeRet == -1)
+			{
+				coord = env->player2->getBestMove(gameBoard, env->valBoard, &curMove);
+				mvwprintw(env->win_stats, 20, 64, "Y = %d, X = %d, Val = %d", coord[0] + 1, coord[1] + 1, gameBoard->getBoard()[coord[0]][coord[2]]);
+				env->placeRet = gameBoard->placePiece(coord[0], coord[1], env->player2);
+			}
 			//mvwprintw(env->win_stats, 20, 64, "Y = %d, X = %d, Ret = %d", coord[0] - 1, coord[1] - 1, env->placeRet);
-			env->valBoard->placePiece(coord[0], coord[1], gameBoard);
+			if (env->placeRet == 1)
+				env->valBoard->placePiece(coord[0], coord[1], gameBoard, true);
+			else
+				env->valBoard->placePiece(coord[0], coord[1], gameBoard, false);
 			env->player = 1;
 		}
 		if (env->maxX < 90 || env->maxY < 65)

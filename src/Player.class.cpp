@@ -6,7 +6,7 @@ Player::Player(int playerNum)
 	this->captures = 0;
 }
 
-int		*Player::getBestMove(Board *gameBoard, ValBoard *valBoard)
+int		*Player::getBestMove(Board *gameBoard, ValBoard *valBoard, int *curMove)
 {
 	int				*ret;
 	int				*coord;
@@ -16,7 +16,8 @@ int		*Player::getBestMove(Board *gameBoard, ValBoard *valBoard)
 	tiles = valBoard->fetchTiles();
 	if (tiles.size() == 0)
 		cout << "PROBLEM!" << endl;
-	coord = tiles[0];
+	coord = tiles[*curMove];
+	*curMove = *curMove + 1;
 	ret[0] = coord[1];
 	ret[1] = coord[2];
 	return (ret);
