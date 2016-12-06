@@ -17,6 +17,7 @@ void	Board::printBoardN(WINDOW *w, int activeX, int activeY, int xOff, int yOff)
 			mvwprintw(w, xpos + 1 + yOff, 0 + xOff, "%-1d ", k);
 		xpos += 2;
 	}
+
 	wattron(w, COLOR_PAIR(2));
 	for (int y = 0; y < boardDim; y++)
 	{

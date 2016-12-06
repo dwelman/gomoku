@@ -29,6 +29,7 @@ void	menu(t_env *env)
 			case KEY_DOWN :
 			case KEY_LEFT :
 			case KEY_UP :
+
 				if (env->gameMode == GM_PVP)
 					env->gameMode = GM_PVAI;
 				else
@@ -62,19 +63,17 @@ bool	playerWon(t_env *env)
 	mvwprintw(env->win_board ,winY / 2 + 3 - 2, winX / 2 - 8, "Play Again ? (Y / N) ",  env->player);
 	wattroff(env->win_stats, WA_BLINK);
 	wattroff(env->win_board, COLOR_PAIR(4));
-	input = wgetch(env->win_board);
-	cout << "input bef = " << input << endl;
+	input = 0;
 	while (input != 110 && input != 121)
 	{
+		input = wgetch(env->win_board);
 		if (input == 110)
 			ret = false;
 		else if (input == 121)
 			ret = true;
 		else
 			input = wgetch(env->win_board);
-		cout << "input = " << input << endl;
 	}
-	cout << "ret = " << ret << endl;
 	return (ret);
 }
 
@@ -155,7 +154,7 @@ int		main(int argc, char **argv)
 	ValBoard	*valBoard;
 	bool		exit;
 
-	exit = false;
+	exit = true;
 	env.debug = false;
 	if (argc == 2)
 	{
@@ -184,7 +183,7 @@ int		main(int argc, char **argv)
 			exit = playerVPlayer(&env, gameBoard);
 		cout << "exit " << exit << endl;
 	}
-	while (!exit);
+	while (exit);
 	endwin();
 }
 
