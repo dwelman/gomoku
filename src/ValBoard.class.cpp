@@ -143,90 +143,526 @@ void	ValBoard::placePiece(int y, int x, Board *curBoard, bool wasFlank)
 	}
 	
 	markFlanks(y, x, curPlayNum, curBoard->getBoard());
-
-	/*if (markVictory(y, x, curPlayNum, curBoard->getBoard()) == true)
-		board[y][x] = 2000;*/
+	markFreeThrees(y, x, curPlayNum, curBoard->getBoard());
+	markVictory(y, x, curPlayNum, curBoard->getBoard());
 }
 
-bool	ValBoard::markVictory(int x, int y, int playerNum, int **curBoard)
+void	ValBoard::markFreeThrees(int y, int x, int playerNum, int **curBoard)
 {
-	int	p_y;
-	int	p_x;
-	int	contCount;
+	int		contCount;
+	int		p_y;
+	int		p_x;
 
-	contCount = 0;
-	p_x = x - 5;
-	for (p_y = y - 5; p_y <= y + 5; p_y++)
+	contCount = 1;
+	p_y = y + 1;
+	while (p_y < boardDim && p_y < y + 5)
 	{
-		if (p_y >= 0 && p_y < boardDim && p_x >= 0 && p_x < boardDim)
+		if (curBoard[p_y][x] == playerNum)
 		{
-			if (curBoard[p_y][p_x] == playerNum)
+			contCount++;
+		}
+		else if (curBoard[p_y][x] != 0)
+		{
+			break;
+		}
+		p_y++;
+	}
+	p_y = y - 1;
+	while (p_y >= 0 && p_y > y - 5)
+	{
+		if (curBoard[p_y][x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][x] != 0)
+		{
+			break;
+		}
+		p_y--;
+	}
+	if (contCount >= 3)
+	{
+		p_y = y + 1;
+		while (p_y < boardDim && p_y < y + 5)
+		{
+			if (curBoard[p_y][x] == 0)
 			{
-				contCount++;
+				board[p_y][x] = 1500;
+				break;
 			}
-			else
+			else if (curBoard[p_y][x] != playerNum)
 			{
-				contCount = 0;
+				break;
 			}
-			if (contCount >= 4)
-				return (true);
+			p_y++;
+		}
+		p_y = y - 1;
+		while (p_y < boardDim && p_y < y + 5)
+		{
+			if (curBoard[p_y][x] == 0)
+			{
+				board[p_y][x] = 1500;
+				break;
+			}
+			else if (curBoard[p_y][x] != playerNum)
+			{
+				break;
+			}
+			p_y--;
+		}
+	}
+
+	contCount = 1;
+	p_x = x + 1;
+	while (p_x < boardDim && p_x < x + 5)
+	{
+		if (curBoard[y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[y][p_x] != 0)
+		{
+			break;
 		}
 		p_x++;
 	}
-	contCount = 0;
-	p_x = x - 5;
-	for (p_y = y + 5; p_y >= y - 5; p_y--)
+	p_x = x - 1;
+	while (p_x >= 0 && p_x > x - 5)
 	{
-		if (p_y >= 0 && p_y < boardDim && p_x >= 0 && p_x < boardDim)
+		if (curBoard[y][p_x] == playerNum)
 		{
-			if (curBoard[p_y][p_x] == playerNum)
+			contCount++;
+		}
+		else if (curBoard[y][p_x] != 0)
+		{
+			break;
+		}
+		p_x--;
+	}
+	if (contCount >= 3)
+	{
+		p_x = x + 1;
+		while (p_x < boardDim && p_x < x + 5)
+		{
+			if (curBoard[y][p_x] == 0)
 			{
-				contCount++;
+				board[y][p_x] = 1500;
+				break;
 			}
-			else
+			else if (curBoard[y][p_x] != playerNum)
 			{
-				contCount = 0;
+				break;
 			}
-			if (contCount >= 4)
-				return (true);
+			p_x++;
+		}
+		p_x = x - 1;
+		while (p_x < boardDim && p_x < x + 5)
+		{
+			if (curBoard[y][p_x] == 0)
+			{
+				board[y][p_x] = 1500;
+				break;
+			}
+			else if (curBoard[y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x--;
+		}
+	}
+
+	contCount = 1;
+	p_x = x + 1;
+	p_y = y + 1;
+	while ((p_x < boardDim && p_x < x + 5) && (p_y < boardDim && p_y < y + 5))
+	{
+		if (curBoard[p_y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x++;
+		p_y++;
+	}
+	p_x = x - 1;
+	p_y = y - 1;
+	while ((p_x >= 0 && p_x > x - 5) && (p_y >= 0 && p_y > y - 5))
+	{
+		if (curBoard[p_y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x--;
+		p_y--;
+	}
+	if (contCount >= 3)
+	{
+		p_x = x + 1;
+		p_y = y + 1;
+		while ((p_x < boardDim && p_x < x + 5) && (p_y < boardDim && p_y < y + 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
+			{
+				board[p_y][p_x] = 1500;
+				break;
+			}
+			else if (curBoard[p_y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x++;
+			p_y++;
+		}
+		p_x = x - 1;
+		p_y = y - 1;
+		while ((p_x >= 0 && p_x > x - 5) && (p_y >= 0 && p_y > y - 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
+			{
+				board[p_y][p_x] = 1500;
+				break;
+			}
+			else if (curBoard[p_y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x--;
+			p_y--;
+		}
+	}
+
+	contCount = 1;
+	p_x = x - 1;
+	p_y = y + 1;
+	while ((p_x >= 0 && p_x > x - 5) && (p_y < boardDim && p_y < y + 5))
+	{
+		if (curBoard[p_y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x--;
+		p_y++;
+	}
+	p_x = x + 1;
+	p_y = y - 1;
+	while ((p_x < boardDim && p_x < x + 5) && (p_y >= 0 && p_y > y - 5))
+	{
+		if (curBoard[p_y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x++;
+		p_y--;
+	}
+	if (contCount >= 3)
+	{
+		p_x = x - 1;
+		p_y = y + 1;
+		while ((p_x >= 0 && p_x > x - 5) && (p_y < boardDim && p_y < y + 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
+			{
+				board[p_y][p_x] = 1500;
+				break;
+			}
+			else if (curBoard[p_y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x--;
+			p_y++;
+		}
+		p_x = x + 1;
+		p_y = y - 1;
+		while ((p_x < boardDim && p_x < x + 5) && (p_y >= 0 && p_y > y - 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
+			{
+				board[p_y][p_x] = 1500;
+				break;
+			}
+			else if (curBoard[p_y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x++;
+			p_y--;
+		}
+	}
+}
+
+void	ValBoard::markVictory(int y, int x, int playerNum, int **curBoard)
+{
+	int		contCount;
+	int		p_y;
+	int		p_x;
+
+	contCount = 1;
+	p_y = y + 1;
+	while (p_y < boardDim && p_y < y + 5)
+	{
+		if (curBoard[p_y][x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][x] != 0)
+		{
+			break;
+		}
+		p_y++;
+	}
+	p_y = y - 1;
+	while (p_y >= 0 && p_y > y - 5)
+	{
+		if (curBoard[p_y][x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][x] != 0)
+		{
+			break;
+		}
+		p_y--;
+	}
+	if (contCount >= 4)
+	{
+		p_y = y + 1;
+		while (p_y < boardDim && p_y < y + 5)
+		{
+			if (curBoard[p_y][x] == 0)
+			{
+				board[p_y][x] = 2000;
+				break;
+			}
+			else if (curBoard[p_y][x] != playerNum)
+			{
+				break;
+			}
+			p_y++;
+		}
+		p_y = y - 1;
+		while (p_y < boardDim && p_y < y + 5)
+		{
+			if (curBoard[p_y][x] == 0)
+			{
+				board[p_y][x] = 2000;
+				break;
+			}
+			else if (curBoard[p_y][x] != playerNum)
+			{
+				break;
+			}
+			p_y--;
+		}
+	}
+
+	contCount = 1;
+	p_x = x + 1;
+	while (p_x < boardDim && p_x < x + 5)
+	{
+		if (curBoard[y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[y][p_x] != 0)
+		{
+			break;
 		}
 		p_x++;
 	}
-	contCount = 0;
-	for (p_y = y + 5; p_y >= y - 5; p_y--)
+	p_x = x - 1;
+	while (p_x >= 0 && p_x > x - 5)
 	{
-		if (p_y >= 0 && p_y < boardDim)
+		if (curBoard[y][p_x] == playerNum)
 		{
-			if (curBoard[p_y][x] == playerNum)
+			contCount++;
+		}
+		else if (curBoard[y][p_x] != 0)
+		{
+			break;
+		}
+		p_x--;
+	}
+	if (contCount >= 4)
+	{
+		p_x = x + 1;
+		while (p_x < boardDim && p_x < x + 5)
+		{
+			if (curBoard[y][p_x] == 0)
 			{
-				contCount++;
+				board[y][p_x] = 2000;
+				break;
 			}
-			else
+			else if (curBoard[y][p_x] != playerNum)
 			{
-				contCount = 0;
+				break;
 			}
-			if (contCount >= 4)
-				return (true);
+			p_x++;
+		}
+		p_x = x - 1;
+		while (p_x < boardDim && p_x < x + 5)
+		{
+			if (curBoard[y][p_x] == 0)
+			{
+				board[y][p_x] = 2000;
+				break;
+			}
+			else if (curBoard[y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x--;
 		}
 	}
-	contCount = 0;
-	for (p_x = x + 5; p_x >= x - 5; p_x--)
+
+	contCount = 1;
+	p_x = x + 1;
+	p_y = y + 1;
+	while ((p_x < boardDim && p_x < x + 5) && (p_y < boardDim && p_y < y + 5))
 	{
-		if (p_x >= 0 && p_x < boardDim)
+		if (curBoard[p_y][p_x] == playerNum)
 		{
-			if (curBoard[y][p_x] == playerNum)
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x++;
+		p_y++;
+	}
+	p_x = x - 1;
+	p_y = y - 1;
+	while ((p_x >= 0 && p_x > x - 5) && (p_y >= 0 && p_y > y - 5))
+	{
+		if (curBoard[p_y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x--;
+		p_y--;
+	}
+	if (contCount >= 4)
+	{
+		p_x = x + 1;
+		p_y = y + 1;
+		while ((p_x < boardDim && p_x < x + 5) && (p_y < boardDim && p_y < y + 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
 			{
-				contCount++;
+				board[p_y][p_x] = 2000;
+				break;
 			}
-			else
+			else if (curBoard[p_y][p_x] != playerNum)
 			{
-				contCount = 0;
+				break;
 			}
-			if (contCount >= 4)
-				return (true);
+			p_x++;
+			p_y++;
+		}
+		p_x = x - 1;
+		p_y = y - 1;
+		while ((p_x >= 0 && p_x > x - 5) && (p_y >= 0 && p_y > y - 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
+			{
+				board[p_y][p_x] = 2000;
+				break;
+			}
+			else if (curBoard[p_y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x--;
+			p_y--;
 		}
 	}
-	return (false);
+
+	contCount = 1;
+	p_x = x - 1;
+	p_y = y + 1;
+	while ((p_x >= 0 && p_x > x - 5) && (p_y < boardDim && p_y < y + 5))
+	{
+		if (curBoard[p_y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x--;
+		p_y++;
+	}
+	p_x = x + 1;
+	p_y = y - 1;
+	while ((p_x < boardDim && p_x < x + 5) && (p_y >= 0 && p_y > y - 5))
+	{
+		if (curBoard[p_y][p_x] == playerNum)
+		{
+			contCount++;
+		}
+		else if (curBoard[p_y][p_x] != 0)
+		{
+			break;
+		}
+		p_x++;
+		p_y--;
+	}
+	if (contCount >= 4)
+	{
+		p_x = x - 1;
+		p_y = y + 1;
+		while ((p_x >= 0 && p_x > x - 5) && (p_y < boardDim && p_y < y + 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
+			{
+				board[p_y][p_x] = 2000;
+				break;
+			}
+			else if (curBoard[p_y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x--;
+			p_y++;
+		}
+		p_x = x + 1;
+		p_y = y - 1;
+		while ((p_x < boardDim && p_x < x + 5) && (p_y >= 0 && p_y > y - 5))
+		{
+			if (curBoard[p_y][p_x] == 0)
+			{
+				board[p_y][p_x] = 2000;
+				break;
+			}
+			else if (curBoard[p_y][p_x] != playerNum)
+			{
+				break;
+			}
+			p_x++;
+			p_y--;
+		}
+	}
 }
 
 void	ValBoard::unmarkFlanks(int y, int x, int playerNum, Board *curBoard)

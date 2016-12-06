@@ -23,5 +23,6 @@ private:
 
 		void	markFlanks(int y, int x, int playerNum, int **curBoard);
 		void	unmarkFlanks(int y, int x, int playerNum, Board *curBoard);
-		bool	markVictory(int x, int y, int playerNum, int **curBoard);
+		void	markFreeThrees(int y, int x, int playerNum, int **curBoard);
+		void	markVictory(int y, int x, int playerNum, int **curBoard);
 };
