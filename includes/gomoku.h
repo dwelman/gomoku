@@ -59,3 +59,15 @@ void	initWin(t_env *env);
 void	initEnv(t_env *env);
 
 void	cleanup(t_env *env);
+
+bool	playerAILoop(t_env *env, Board *gameBoard);
+
+bool	playerVPlayer(t_env *env, Board *gameBoard);
+
+bool	playerWon(t_env *env);
+
+void	menu(t_env *env);
+
+void	howToPlay(t_env *env);
+
+
