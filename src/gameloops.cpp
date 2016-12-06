@@ -34,7 +34,8 @@ bool	playerAILoop(t_env *env, Board *gameBoard)
 				env->valBoard->placePiece(coord[0], coord[1], gameBoard, true);
 			else
 				env->valBoard->placePiece(coord[0], coord[1], gameBoard, false);
-			env->player = 1;
+			if (env->placeRet != 2)
+				env->player = 1;
 		}
 		if (env->maxX < 90 || env->maxY < 65)
 		{
