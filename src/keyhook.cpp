@@ -40,30 +40,38 @@ void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_p
 			if (env->player == 1)
 			{
 				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , env->player1);
-				if ((env->placeRet == 0 && !env->debug)
-					|| (env->placeRet == 0 && env->debug && env->gameMode == GM_PVAI))
+				mvwprintw(env->win_board, 0, 0, "RET = %d", env->placeRet);
+				refreshAll(env);
+				if (env->placeRet != -1)
 				{
+					auto end_time = chrono::high_resolution_clock::now();
+					auto time = end_time - start_time;
+					env->p1_time = chrono::duration_cast<chrono::milliseconds>(time).count();
+					if ((env->placeRet != 2 && !env->debug) || (env->gameMode == GM_PVAI && env->placeRet != 2))
+						env->player = 2;
+					env->validMoveMade = true;
 					if (env->placeRet == 1)
 						env->valBoard->placePiece(env->activeY, env->activeX, gameBoard, true);
 					else
 						env->valBoard->placePiece(env->activeY, env->activeX, gameBoard, false);
-					if (env->placeRet != 2)
-						env->player = 2;
-					auto end_time = chrono::high_resolution_clock::now();
-					auto time = end_time - start_time;
-					env->p1_time = chrono::duration_cast<chrono::milliseconds>(time).count();
-					env->validMoveMade = true;
 				}
 			}
 			else
 			{
 				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , env->player2);
-				if ((env->placeRet == 0 && !env->debug) || env->gameMode == GM_PVAI)
+				mvwprintw(env->win_board, 0, 0, "RET = %d", env->placeRet);
+				refreshAll(env);
+				if (env->placeRet != -1)
 				{
 					auto end_time = chrono::high_resolution_clock::now();
 					auto time = end_time - start_time;
 					env->p2_time = chrono::duration_cast<chrono::milliseconds>(time).count();
-					env->player = 1;
+					if (env->placeRet == 1)
+						env->valBoard->placePiece(env->activeY, env->activeX, gameBoard, true);
+					else
+						env->valBoard->placePiece(env->activeY, env->activeX, gameBoard, false);
+					if (!env->debug)
+						env->player = 1;
 					env->validMoveMade = true;
 				}
 			}

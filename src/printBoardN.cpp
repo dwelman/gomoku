@@ -35,6 +35,7 @@ void	Board::printBoardN(WINDOW *w, int activeX, int activeY, int xOff, int yOff)
 				wattroff(w, WA_BLINK);
 				wattroff(w, WA_STANDOUT);
 			}
+			//mvwprintw(w, y * 2 + 3 + yOff, 2 * xpos + 4 + xOff, "%d ", this->board[y][x]);
 			switch (this->board[y][x])
 			{
 				case 1 :
