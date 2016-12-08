@@ -1,5 +1,10 @@
 #include <ValBoard.class.h>
 
+ValBoard::ValBoard()
+{
+	
+}
+
 ValBoard::ValBoard(int boardDim)
 {
 	this->boardDim = boardDim;
@@ -18,6 +23,43 @@ ValBoard::ValBoard(int boardDim)
 		for (int x = (boardDim / 2) - 1; x < (boardDim / 2) + 1; x++)
 		{
 			setVal(y, x, 1);
+		}
+	}
+}
+
+ValBoard::ValBoard(const ValBoard &obj)
+{
+	this->boardDim = obj.boardDim;
+
+	this->board = (int **)malloc(sizeof(int *) * boardDim);
+	for (int y = 0; y < boardDim; y++)
+	{
+		this->board[y] = (int *)malloc(sizeof(int) * boardDim);
+		for (int x = 0; x < boardDim; x++)
+		{
+			this->board[y][x] = obj.board[y][x];
+		}
+	}
+}
+
+void			ValBoard::setBoard(int **newArr)
+{
+	for (int y = 0; y < boardDim; y++)
+	{
+		for (int x = 0; x < boardDim; x++)
+		{
+			board[y][x] = newArr[y][x];
+		}
+	}
+}
+
+void			ValBoard::copyBoard(int **newArr)
+{
+	for (int y = 0; y < boardDim; y++)
+	{
+		for (int x = 0; x < boardDim; x++)
+		{
+			newArr[y][x] = board[y][x];
 		}
 	}
 }
@@ -47,6 +89,98 @@ vector<int*>	ValBoard::fetchTiles()
 		}
 	);
 	return (ret);
+}
+
+void	ValBoard::removePiece(int y, int x, Board *curBoard)
+{
+	int		p_y;
+	int		p_x;
+	int		curPlayNum;
+	bool	isYDiagSizePos;
+	bool	isYDiagSizeNeg;
+
+	board[y][x] += 1000;
+	curPlayNum = curBoard->getBoard()[y][x];
+
+	p_y = y - 1;
+	p_x = x - 1;
+	while ((p_y >= 0 && p_x >= 0) && (p_y > y - 5 && p_x > x - 5))
+	{
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		board[p_y][p_x]--;
+		p_y--;
+		p_x--;
+	}
+
+	p_y = y + 1;
+	p_x = x + 1;
+	while ((p_y < boardDim && p_x < boardDim) && (p_y < y + 5 && p_x < x + 5))
+	{
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		board[p_y][p_x]--;
+		p_y++;
+		p_x++;
+	}
+
+	p_y = y - 1;
+	p_x = x + 1;
+	while ((p_y >= 0 && p_x < boardDim) && (p_y > y - 5 && p_x < x + 5))
+	{
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		board[p_y][p_x]--;
+		p_y--;
+		p_x++;
+	}
+
+	p_y = y + 1;
+	p_x = x - 1;
+	while ((p_y < boardDim && p_x >= 0) && (p_y < y + 5 && p_x > x - 5))
+	{
+		if (!(curBoard->getBoard()[p_y][p_x] == 0 || curBoard->getBoard()[p_y][p_x] == curPlayNum))
+			break;
+		board[p_y][p_x]--;
+		p_y++;
+		p_x--;
+	}
+
+	p_y = y + 1;
+	while (p_y < boardDim && p_y < y + 5)
+	{
+		if (!(curBoard->getBoard()[p_y][x] == 0 || curBoard->getBoard()[p_y][x] == curPlayNum))
+			break;
+		board[p_y][x]--;
+		p_y++;
+	}
+
+	p_y = y - 1;
+	while (p_y >= 0 && p_y > y - 5)
+	{
+		if (!(curBoard->getBoard()[p_y][x] == 0 || curBoard->getBoard()[p_y][x] == curPlayNum))
+			break;
+		board[p_y][x]--;
+		p_y--;
+	}
+
+	p_x = x + 1;
+	while (p_x < boardDim && p_x < x + 5)
+	{
+		if (!(curBoard->getBoard()[y][p_x] == 0 || curBoard->getBoard()[y][p_x] == curPlayNum))
+			break;
+		board[y][p_x]--;
+		p_x++;
+	}
+
+	p_x = x - 1;
+	while (p_x >= 0 && p_x > x - 5)
+	{
+		if (!(curBoard->getBoard()[y][p_x] == 0 || curBoard->getBoard()[y][p_x] == curPlayNum))
+			break;
+		board[y][p_x]--;
+		p_x--;
+	}
 }
 
 void	ValBoard::placePiece(int y, int x, Board *curBoard, bool wasFlank)
@@ -197,7 +331,7 @@ void	ValBoard::markFreeThrees(int y, int x, int playerNum, int **curBoard)
 			p_y++;
 		}
 		p_y = y - 1;
-		while (p_y < boardDim && p_y < y + 5)
+		while (p_y >= 0 && p_y > y - 5)
 		{
 			if (curBoard[p_y][x] == 0)
 			{
@@ -256,7 +390,7 @@ void	ValBoard::markFreeThrees(int y, int x, int playerNum, int **curBoard)
 			p_x++;
 		}
 		p_x = x - 1;
-		while (p_x < boardDim && p_x < x + 5)
+		while (p_x >= 0 && p_x > x - 5)
 		{
 			if (curBoard[y][p_x] == 0)
 			{
@@ -456,7 +590,7 @@ void	ValBoard::markVictory(int y, int x, int playerNum, int **curBoard)
 			p_y++;
 		}
 		p_y = y - 1;
-		while (p_y < boardDim && p_y < y + 5)
+		while (p_y >= 0 && p_y > y - 5)
 		{
 			if (curBoard[p_y][x] == 0)
 			{
@@ -515,7 +649,7 @@ void	ValBoard::markVictory(int y, int x, int playerNum, int **curBoard)
 			p_x++;
 		}
 		p_x = x - 1;
-		while (p_x < boardDim && p_x < x + 5)
+		while (p_x >= 0 && p_x > x - 5)
 		{
 			if (curBoard[y][p_x] == 0)
 			{
@@ -870,12 +1004,12 @@ void	ValBoard::markFlanks(int y, int x, int playerNum, int **curBoard)
 
 			if (curBoard[y + 1][x + 1] == playerNum)
 			if (curBoard[y + 2][x + 2] != 0 && curBoard[y + 2][x + 2] != playerNum)
-			if (x - 1 >= 0)
+			if (x - 1 >= 0 && y - 1 >= 0)
 			{
 				if (board[y - 1][x - 1] >= 0)
 					board[y - 1][x - 1] = 1000;
 			}
-			if (x - 2 >= 0)
+			if (x - 2 >= 0 && y - 2 >= 0)
 			{
 				if (curBoard[y - 1][x - 1] == playerNum)
 				if (curBoard[y + 1][x + 1] != 0 && curBoard[y + 1][x + 1] != playerNum)
@@ -896,12 +1030,12 @@ void	ValBoard::markFlanks(int y, int x, int playerNum, int **curBoard)
 
 			if (curBoard[y - 1][x + 1] == playerNum)
 			if (curBoard[y - 2][x + 2] != 0 && curBoard[y - 2][x + 2] != playerNum)
-			if (x - 1 >= 0)
+			if (x - 1 >= 0 && y + 1 < boardDim)
 			{
 				if (board[y + 1][x - 1] >= 0)
 					board[y + 1][x - 1] = 1000;
 			}
-			if (x - 2 >= 0)
+			if (x - 2 >= 0 && y + 2 < boardDim)
 			{
 				if (curBoard[y + 1][x - 1] == playerNum)
 				if (curBoard[y - 1][x + 1] != 0 && curBoard[y - 1][x + 1] != playerNum)
@@ -947,14 +1081,15 @@ void	ValBoard::markFlanks(int y, int x, int playerNum, int **curBoard)
 				board[y + 3][x - 3] = 1000;
 			}
 
+			if (y - 2 >= 0)
 			if (curBoard[y - 1][x - 1] == playerNum)
 			if (curBoard[y - 2][x - 2] != 0 && curBoard[y - 2][x - 2] != playerNum)
-			if (x + 1 < boardDim)
+			if (x + 1 < boardDim && y + 1 < boardDim)
 			{
 				if (board[y + 1][x + 1] >= 0)
 					board[y + 1][x + 1] = 1000;
 			}
-			if (x + 2 < boardDim)
+			if (x + 2 < boardDim && y - 1 >= 0)
 			{
 				if (curBoard[y + 1][x + 1] == playerNum)
 				if (curBoard[y - 1][x - 1] != 0 && curBoard[y - 1][x - 1] != playerNum)
@@ -973,14 +1108,15 @@ void	ValBoard::markFlanks(int y, int x, int playerNum, int **curBoard)
 				board[y - 3][x - 3] = 1000;
 			}
 
+			if (y + 2 < boardDim)
 			if (curBoard[y + 1][x - 1] == playerNum)
 			if (curBoard[y + 2][x - 2] != 0 && curBoard[y + 2][x - 2] != playerNum)
-			if (x + 1 < boardDim)
+			if (x + 1 < boardDim && y - 1 >= 0)
 			{
 				if (board[y - 1][x + 1] >= 0)
 					board[y - 1][x + 1] = 1000;
 			}
-			if (x + 2 < boardDim)
+			if (x + 2 < boardDim && y + 1 < boardDim)
 			{
 				if (curBoard[y - 1][x + 1] == playerNum)
 				if (curBoard[y + 1][x - 1] != 0 && curBoard[y + 1][x - 1] != playerNum)

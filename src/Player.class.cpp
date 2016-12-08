@@ -14,8 +14,10 @@ int		*Player::getBestMove(Board *gameBoard, ValBoard *valBoard, int *curMove)
 
 	ret = (int *)malloc(sizeof(int) * 2);
 	tiles = valBoard->fetchTiles();
-	if (tiles.size() == 0)
-		cout << "PROBLEM!" << endl;
+	if (tiles.size() == 0 || *curMove >= tiles.size())
+	{
+		return (NULL);
+	}
 	coord = tiles[*curMove];
 	*curMove = *curMove + 1;
 	ret[0] = coord[1];

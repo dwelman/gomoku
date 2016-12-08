@@ -10,6 +10,7 @@ class	Player
 		int		getPlayerNum(){ return (this->playerNum); }
 		int		getCaptures(){ return (this->captures); }
 
+		void	setCaptures(int val){ this->captures = val; }
 		void	incCaptures(int val){ this->captures += val; }
 		int		*getBestMove(Board *gameBoard, ValBoard *valBoard, int *curMove);
 

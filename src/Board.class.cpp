@@ -15,6 +15,43 @@ Board::Board(int boardDim)
 	}
 }
 
+Board::Board(const Board &obj)
+{
+	this->boardDim = obj.boardDim;
+
+	this->board = (int **)malloc(sizeof(int *) * boardDim);
+	for (int y = 0; y < boardDim; y++)
+	{
+		this->board[y] = (int *)malloc(sizeof(int) * boardDim);
+		for (int x = 0; x < boardDim; x++)
+		{
+			this->board[y][x] = obj.board[y][x];
+		}
+	}
+}
+
+void			Board::setBoard(int **newArr)
+{
+	for (int y = 0; y < boardDim; y++)
+	{
+		for (int x = 0; x < boardDim; x++)
+		{
+			board[y][x] = newArr[y][x];
+		}
+	}
+}
+
+void			Board::copyBoard(int **newArr)
+{
+	for (int y = 0; y < boardDim; y++)
+	{
+		for (int x = 0; x < boardDim; x++)
+		{
+			newArr[y][x] = board[y][x];
+		}
+	}
+}
+
 void	Board::printBoard()
 {
 	for (int k = 0; k <= boardDim; k++)

@@ -18,6 +18,7 @@ class	ValBoard;
 #define Y_OFF 2
 #define GM_PVP 1
 #define GM_PVAI 2
+#define BOARD_DIM 19
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -46,8 +47,6 @@ typedef struct		s_env
 
 using namespace std;
 
-#define BOARD_DIM 19
-
 void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_point start_time);
 
 void	drawTitle(t_env *env);
@@ -70,4 +69,4 @@ void	menu(t_env *env);
 
 void	howToPlay(t_env *env);
 
-
+int		minimax(Board *gameBoard, ValBoard *valBoard, Player *player, Player *otherPlayer, int alpha, int beta, int playerNum, int depth);

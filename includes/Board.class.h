@@ -9,10 +9,13 @@ class	Board
 {
     public:
         Board(int boardDim);
+        Board(const Board &obj);
 
         int     getBoardDim(){ return (this->boardDim); }
         int     **getBoard(){ return (this->board); }
 
+        void	setBoard(int **newArr);
+		void	copyBoard(int **newArr);
         void    printBoard();
 		void    printBoardN(WINDOW *w, int activeX, int activeY, int xOff, int yOff);
         int     placePiece(int y, int x, Player *player);
