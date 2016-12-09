@@ -58,13 +58,19 @@ bool	playerAILoop(t_env *env, Board *gameBoard)
 				gameBoard->copyBoard(boardTemp);
 				tempCaps = env->player2->getCaptures();
 				//env->placeRet = gameBoard->placePiece(coords.at(curCount)[0], coords.at(curCount)[1], env->player2);
-				value = minimax(gameBoard, env->valBoard, env->player2, env->player1, 3000, -3000, 2, 2);
+				value = minimax(gameBoard, env->valBoard, env->player2, env->player1, 0, 0, 2, 1);
 				//cout << value << endl;
 				if (value > topScore)
 				{
-					topScore = value;
-					bestCoord[0] = coords.at(curCount)[1];
-					bestCoord[1] = coords.at(curCount)[2];
+					env->placeRet = gameBoard->placePiece(coords.at(curCount)[1], coords.at(curCount)[2], env->player2);
+					env->player2->setCaptures(tempCaps);
+					gameBoard->setBoard(boardTemp);
+					if (env->placeRet != -1)
+					{
+						topScore = value;
+						bestCoord[0] = coords.at(curCount)[1];
+						bestCoord[1] = coords.at(curCount)[2];
+					}
 				}
 				/*if (env->placeRet != -1)
 				{
@@ -86,7 +92,7 @@ bool	playerAILoop(t_env *env, Board *gameBoard)
 				}*/
 				curCount++;
 			}
-			cout << "y = " << bestCoord[0] + 1 << " x = " << bestCoord[1] + 1 << endl;
+			//cout << "y = " << bestCoord[0] + 1 << " x = " << bestCoord[1] + 1 << endl;
 			env->placeRet = gameBoard->placePiece(bestCoord[0], bestCoord[1], env->player2);
 			/*while (env->placeRet == -1)
 			{

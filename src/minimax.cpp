@@ -77,13 +77,13 @@ int	minimax(Board *gameBoard, ValBoard *valBoard, Player *player, Player *otherP
 				//cout << value << endl;
 				if (value > ret || ret == 3000)
 					ret = value;
-				if (ret > alpha || alpha == -3000)
+				if (ret > alpha)
 					alpha = ret;
 				player->setCaptures(tempCaps);
 				valBoard->setBoard(valTemp);
 				gameBoard->setBoard(boardTemp);
-				if (beta <= alpha)
-					return (alpha);
+				if (ret < alpha)
+					return (ret);
 			}
 			curCount++;
 		}
@@ -110,15 +110,16 @@ int	minimax(Board *gameBoard, ValBoard *valBoard, Player *player, Player *otherP
 					return (2000);
 				//cout << "I DIDNT BREAK IT!" << endl;
 				value = minimax(gameBoard, valBoard, player, otherPlayer, beta, alpha, (playerNum == 1 ? 2 : 1), depth - 1);
+				//cout << value << endl;
 				if (value < ret || ret == -3000)
 					ret = value;
-				if (ret < beta || beta == 3000)
+				if (ret < beta)
 					beta = ret;
 				otherPlayer->setCaptures(tempCaps);
 				valBoard->setBoard(valTemp);
 				gameBoard->setBoard(boardTemp);
-				if (beta <= alpha)
-					return (beta);
+				if (ret > beta)
+					return (ret);
 			}
 			curCount++;
 		}
