@@ -128,7 +128,7 @@ bool	playerAILoop(t_env *env, Board *gameBoard)
 		drawTitle(env);
 		refreshAll(env);
 	}
-	return (playerWon(env));
+	return (playerWon(env, gameBoard));
 }
 
 
@@ -155,5 +155,5 @@ bool	playerVPlayer(t_env *env, Board *gameBoard)
 		drawTitle(env);
 		refreshAll(env);
 	}
-	return (playerWon(env));
+	return (playerWon(env, gameBoard));
 }

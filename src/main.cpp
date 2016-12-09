@@ -1,6 +1,6 @@
 #include <gomoku.h>
 
-bool	playerWon(t_env *env)
+bool	playerWon(t_env *env, Board	*gameBoard)
 {
 	int		winX;
 	int		winY;
@@ -8,18 +8,21 @@ bool	playerWon(t_env *env)
 	bool	ret;
 
 	ret = false;
-	getmaxyx(env->win_board, winY, winX);
-	wclear(env->win_board);
+	wmove(env->win_stats, 20, 32);
+	wclear(env->win_stats);
+	wclrtoeol(env->win_stats);
+	env->gameStarted = false;
+	drawTitle(env);
 	if (env->player == 1)
-		wattron(env->win_board, COLOR_PAIR(5));
+		wattron(env->win_stats, COLOR_PAIR(5));
 	else
-		wattron(env->win_board, COLOR_PAIR(6));
-	wattron(env->win_board, WA_BLINK);
-	mvwprintw(env->win_board ,winY / 2 + 3 - 3, winX / 2 - 8, "Player %d won!",  env->player);
-	mvwprintw(env->win_board ,winY / 2 + 3 - 2, winX / 2 - 8, "Play Again ? (Y / N) ",  env->player);
+		wattron(env->win_stats, COLOR_PAIR(6));
+	wattron(env->win_stats, WA_BLINK);
+	mvwprintw(env->win_stats, 20, 29,"Player %d won! Play Again ? (Y / N)",  env->player);
 	wattroff(env->win_stats, WA_BLINK);
 	wattroff(env->win_board, COLOR_PAIR(4));
 	input = 0;
+	refreshAll(env);
 	while (input != 110 && input != 121)
 	{
 		input = wgetch(env->win_board);
@@ -28,17 +31,40 @@ bool	playerWon(t_env *env)
 		else if (input == 121)
 			ret = true;
 		else
+		{
+			getmaxyx(stdscr, winY, winX);
+			wclear(env->win_board);
+			if (winX < 90 || winY < 65)
+			{
+				mvwprintw(env->win_board, 1, 1, "%s", "Please Enlarge window to view board.");
+			}
+			else
+				gameBoard->printBoardN(env->win_board, -1, -1, X_OFF, Y_OFF);
+			drawTitle(env);
+			wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+			wmove(env->win_stats, 20, 32);
+			wclrtoeol(env->win_stats);
+			if (env->player == 1)
+				wattron(env->win_stats, COLOR_PAIR(5));
+			else
+				wattron(env->win_stats, COLOR_PAIR(6));
+			wattron(env->win_stats, WA_BLINK);
+			mvwprintw(env->win_stats, 20, 29,"Player %d won! Play Again ? (Y / N)",  env->player);
+			wattroff(env->win_stats, WA_BLINK);
+			wattroff(env->win_board, COLOR_PAIR(4));
+			refreshAll(env);
 			input = wgetch(env->win_board);
+		}
 	}
 	return (ret);
 }
 
 int		main(int argc, char **argv)
 {
-	t_env		env;
-	Board		*gameBoard;
-	ValBoard	*valBoard;
-	bool		exit;
+	t_env			env;
+	Board			*gameBoard;
+	ValBoard		*valBoard;
+	bool			exit;
 
 	exit = true;
 	env.debug = false;
@@ -65,7 +91,6 @@ int		main(int argc, char **argv)
 			exit = playerAILoop(&env, gameBoard);
 		else
 			exit = playerVPlayer(&env, gameBoard);
-		cout << "exit " << exit << endl;
 	}
 	while (exit);
 	endwin();

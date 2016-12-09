@@ -63,7 +63,7 @@ bool	playerAILoop(t_env *env, Board *gameBoard);
 
 bool	playerVPlayer(t_env *env, Board *gameBoard);
 
-bool	playerWon(t_env *env);
+bool	playerWon(t_env *, Board *gameBoard);
 
 void	menu(t_env *env);
 

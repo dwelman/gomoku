@@ -106,6 +106,9 @@ void	howToPlay(t_env *env)
 	mvwprintw(env->win_board, 17, 3, "X can place a piece on 5 and will result in a capture");
 	mvwprintw(env->win_board, 18, 3, "1 2 3 4 5     . . . . .");
 	mvwprintw(env->win_board, 18, 3, ". X O O .  >> . X . . X");
+	wattron(env->win_board, WA_BOLD | WA_UNDERLINE);
+	mvwprintw(env->win_board, 20, 2, "Free Threes :");
+	wattroff(env->win_board, WA_BOLD | WA_UNDERLINE);
 	input = wgetch(env->win_board);
 	wclear(env->win_board);
 	wborder(env->win_board, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
