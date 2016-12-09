@@ -7,7 +7,6 @@ bool	playerWon(t_env *env, Board	*gameBoard)
 	int		input;
 	bool	ret;
 
-	ret = false;
 	wmove(env->win_stats, 20, 32);
 	wclear(env->win_stats);
 	wclrtoeol(env->win_stats);
@@ -26,6 +25,7 @@ bool	playerWon(t_env *env, Board	*gameBoard)
 	while (input != 110 && input != 121)
 	{
 		input = wgetch(env->win_board);
+		ret = false;
 		if (input == 110)
 			ret = false;
 		else if (input == 121)

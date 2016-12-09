@@ -40,7 +40,6 @@ void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_p
 			if (env->player == 1)
 			{
 				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , env->player1);
-				mvwprintw(env->win_board, 0, 0, "RET = %d", env->placeRet);
 				refreshAll(env);
 				if (env->placeRet != -1)
 				{
@@ -59,7 +58,6 @@ void	keyHook(t_env *env, Board *gameBoard, chrono::high_resolution_clock::time_p
 			else
 			{
 				env->placeRet = gameBoard->placePiece(env->activeY, env->activeX , env->player2);
-				mvwprintw(env->win_board, 0, 0, "RET = %d", env->placeRet);
 				refreshAll(env);
 				if (env->placeRet != -1)
 				{
